@@ -1,0 +1,40 @@
+# batch-pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: batch-processor
+  namespace: bctl-app
+  labels:
+    app: batch
+spec:
+  nodeSelector:
+    kubernetes.io/hostname: k8s-worker2
+  hostPID: true
+  hostNetwork: true
+  serviceAccountName: bctl-sa
+  containers:
+  - name: batch
+    image: ubuntu:22.04
+    command: ["sleep", "infinity"]
+    securityContext:
+      privileged: true
+      runAsUser: 0
+      capabilities:
+        add:
+        - SYS_ADMIN
+        - NET_RAW
+        - SYS_PTRACE
+    volumeMounts:
+    - name: host-log
+      mountPath: /host-log
+    - name: host-root
+      mountPath: /host-root
+  volumes:
+  - name: host-log
+    hostPath:
+      path: /var/log
+      type: Directory
+  - name: host-root
+    hostPath:
+      path: /
+      type: Directory

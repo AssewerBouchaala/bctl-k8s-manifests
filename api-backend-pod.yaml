@@ -1,0 +1,33 @@
+# api-backend-pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: api-backend
+  namespace: bctl-app
+  labels:
+    app: api-backend
+spec:
+  nodeSelector:
+    kubernetes.io/hostname: k8s-worker1
+  serviceAccountName: bctl-sa
+  containers:
+  - name: api-backend
+    image: piesecurity/apache-struts2-cve-2017-5638   # image publique PoC
+    ports:
+    - containerPort: 8080
+    env:
+    - name: DB_PASSWORD
+      value: "sup3rS3cr3t"               # secret en clair (intentionnel)
+    - name: API_TOKEN
+      value: "tok_prod_abc123xyz"
+    securityContext:
+      runAsUser: 0
+      allowPrivilegeEscalation: true
+    volumeMounts:
+    - name: proc
+      mountPath: /proc-host
+      readOnly: false
+  volumes:
+  - name: proc
+    hostPath:
+      path: /proc

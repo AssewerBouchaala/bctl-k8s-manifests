@@ -1,0 +1,19 @@
+# sa-admin.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: bctl-sa
+  namespace: bctl-app
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: bctl-admin-binding
+subjects:
+- kind: ServiceAccount
+  name: bctl-sa
+  namespace: bctl-app
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io

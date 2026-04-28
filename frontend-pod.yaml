@@ -1,0 +1,19 @@
+# frontend-pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: frontend
+  namespace: bctl-app
+  labels:
+    app: frontend
+spec:
+  nodeSelector:
+    kubernetes.io/hostname: k8s-worker1
+  containers:
+  - name: frontend
+    image: nginx:1.14.0          # version outdated intentionnelle
+    ports:
+    - containerPort: 80
+    securityContext:
+      runAsUser: 0               # root
+      allowPrivilegeEscalation: true
